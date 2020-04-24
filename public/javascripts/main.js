@@ -45,3 +45,42 @@ function deleteCourse(id) { // Ta bort en kurs
         ajax.send();
     }
 }
+
+function addCourse() {
+
+    
+    const data = {
+        coursename: document.getElementById("courseName").value,
+        courseperiod: document.getElementById("coursePeriod").value
+    }
+    
+    ajax.onreadystatechange = function() {
+        if (this.status == 200 && this.readyState == 4) {
+            console.log("Success");
+            //location.reload();
+            //return false;
+        }
+    }
+    
+    ajax.open("POST", "/courses", false);
+    ajax.setRequestHeader("Content-Type", "application/json");
+    ajax.send(JSON.stringify(data));
+    console.log(JSON.stringify(data));
+
+    /*
+    ajax.addEventListener( "load", function(event) {
+      alert( event.target.responseText );
+    } );
+    */
+
+    
+}
+
+
+window.addEventListener("load", function () {
+    form.addEventListener("submit", function ( event ) {
+        event.preventDefault();
+    
+        addCourse();
+      });
+});
