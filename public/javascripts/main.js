@@ -20,7 +20,7 @@ ajax.onreadystatechange = function() {
             cell2.innerHTML = row["courseId"];
             cell3.innerHTML = row["courseName"];
             cell4.innerHTML = row["coursePeriod"];
-            cell5.innerHTML = "<a href='#' onclick='deleteCourse(" + row["_id"] + ")'><img src='images/delete.svg' class='deleteimg' alt='Ta bort'></a>";
+            cell5.innerHTML = `<a href='#' onclick='deleteCourse("${row["_id"]}")'><img src='images/delete.svg' class='deleteimg' alt='Ta bort'></a>`;
             newrow.id = row["_id"];
 
         });
@@ -36,7 +36,7 @@ function deleteCourse(id) { // Ta bort en kurs
     if (check === true) { // Om ja;
         let url = "/courses/" + id; // Sätt urln till rätt id
         ajax.onreadystatechange = function() {
-            if (this.status == 200 && this.readyState == 4) { // Om den togs bort i courses.json
+            if (this.status == 200 && this.readyState == 4) { // Om den togs bort
                 var idrow = document.getElementById(id);
                 idrow.remove(); // Ta även bort på sidan så man slipper ladda om
             }
@@ -48,39 +48,30 @@ function deleteCourse(id) { // Ta bort en kurs
 
 function addCourse() {
 
-    
-    const data = {
+    const data = { // Hämta all data från formuläret
+        courseid: document.getElementById("courseId").value,
         coursename: document.getElementById("courseName").value,
         courseperiod: document.getElementById("coursePeriod").value
     }
     
     ajax.onreadystatechange = function() {
         if (this.status == 200 && this.readyState == 4) {
-            console.log("Success");
-            //location.reload();
-            //return false;
+            console.log("Kurs tillagd");
+            location.reload(); // Ladda om sidan om det fungerade
+            return false;
         }
     }
-    
-    ajax.open("POST", "/courses", false);
+    ajax.open("POST", "/courses", false); // Skicka som POST-request
     ajax.setRequestHeader("Content-Type", "application/json");
-    ajax.send(JSON.stringify(data));
-    console.log(JSON.stringify(data));
-
-    /*
-    ajax.addEventListener( "load", function(event) {
-      alert( event.target.responseText );
-    } );
-    */
-
-    
+    ajax.send(JSON.stringify(data)); // Skicka med datan
+    //console.log(JSON.stringify(data));
 }
 
 
-window.addEventListener("load", function () {
-    form.addEventListener("submit", function ( event ) {
+window.addEventListener("load", function () { // Event listener för submit-knappen i formuläret
+    // Koden är skriven utifrån https://developer.mozilla.org/en-US/docs/Learn/Forms/Sending_forms_through_JavaScript
+    form.addEventListener("submit", function (event) {
         event.preventDefault();
-    
         addCourse();
       });
 });
